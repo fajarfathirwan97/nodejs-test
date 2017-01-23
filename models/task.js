@@ -1,7 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Task = sequelize.define('Task', {
-    id: {type: DataTypes.BIGINT, primaryKey:true},
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
     estimatedTime: DataTypes.DATE,

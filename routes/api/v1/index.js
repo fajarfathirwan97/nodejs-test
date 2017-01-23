@@ -13,6 +13,37 @@ router.get('/tasks', function(req, res) {
   });
 });
 
+/* POST Task OR PUT if id exist. */
+router.post('/task',function(req, res) {
+  var inputTask = req.body;
+  if (inputTask.id == undefined){
+  models.Task.create(inputTask).then(function (resultOfTaskPost){
+      res.status(200);
+      res.json({ message : "Task Is Added Succesfully with Id : " + resultOfTaskPost.id});
+    });
+  }else{
+    models.Task.update(
+      {
+        title : inputTask.title,
+        description : inputTask.description,
+        startTime : inputTask.startTime,
+        estimatedTime : inputTask.estimatedTime,
+        finishTime : inputTask.finishTime,
+        finished : inputTask.finished,
+        projectId : inputTask.projectId
+      },
+      {
+         where:
+          {
+           id : inputTask.id
+          }
+      }).then(function (resultOfTaskPost) {
+      res.status(200);
+      res.json({code:200 ,message : "Task is Updated Succesfully, Num of Row(s) Affected is : " + resultOfTaskPost } );
+    });
+  }
+}); 
+
 router.get('/task/:id', function(req, res) {
   var taskId = req.params.id;
   models.Task.findOne(
