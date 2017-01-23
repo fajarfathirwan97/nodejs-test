@@ -9,7 +9,10 @@ app.set('projectField', ['name','id','description','finished']);
 router.get('/tasks', function(req, res) {
   models.Task.all().then(function (resultOfTasks) {
     res.status(200);
-    res.json(resultOfTasks);
+    if(resultOfTasks == null){
+      resultOfTasks = [];
+    }
+    res.json({code:200,message:"Success Get Data",data : resultOfTasks});
   });
 });
 
@@ -19,7 +22,7 @@ router.post('/task',function(req, res) {
   if (inputTask.id == undefined){
   models.Task.create(inputTask).then(function (resultOfTaskPost){
       res.status(200);
-      res.json({ message : "Task Is Added Succesfully with Id : " + resultOfTaskPost.id});
+      res.json({code:200 ,message : "Task Is Added Succesfully with Id : " + resultOfTaskPost.id});
     });
   }else{
     models.Task.update(
@@ -42,7 +45,18 @@ router.post('/task',function(req, res) {
       res.json({code:200 ,message : "Task is Updated Succesfully, Num of Row(s) Affected is : " + resultOfTaskPost } );
     });
   }
-}); 
+});
+
+router.delete('/task/:id',function(req,res) {
+  var taskId = req.params.id;
+  models.Task.destroy({where: {id : taskId}}).then(function(destroyedTask){
+    console.log (destroyedTask);
+    res.status(200);
+    res.json({code:200 , message :"Task is Deleted Succesfully, Num of Row(s) Affected is :" + destroyedTask });
+  }).catch(function(err){
+    console.log(err);
+  });
+});
 
 router.get('/task/:id', function(req, res) {
   var taskId = req.params.id;
@@ -61,7 +75,13 @@ router.get('/task/:id', function(req, res) {
       }
     ]
     }).then( function (resultOfFindTask) {
-      res.json(resultOfFindTask);
+      if(resultOfFindTask == null){
+          resultOfFindTask = [];
+      }
+      res.json({code : 200 , data : resultOfFindTask});
+  }).catch( function(err){
+      console.log('error');    
+      res.json(err);
   });
 });
 
@@ -71,6 +91,10 @@ router.get('/projects', function(req, res) {
   models.Project.all().then(function (resultOfProjects) {
     res.status(200);
     res.json(resultOfProjects);
+    if(resultOfProjects == null){
+      resultOfProjects = [];
+    }
+    res.json({code:200,message:"Success Get Data",data : resultOfProjects});
   });
 });
   
@@ -88,6 +112,10 @@ router.get('/task-of-project', function(req,res) {
    }).then(function (resultTaskOfProject) {
     res.status(200);
     res.json(resultTaskOfProject);
+    if(resultTaskOfProject == null){
+      resultTaskOfProject = [];
+    }
+    res.json({code:200,message:"Success Get Data",data : resultTaskOfProject});
   });
 });
 
