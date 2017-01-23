@@ -7,9 +7,14 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var api = require('./routes/api/v1/index');
 var app = express();
 
+app.use(function(req,res,next){
+    res.setHeader('Access-Control-Allow-Origin' , '*');
+    res.setHeader('Access-Control-Allow-Method' ,'POST,GET,UPDATE,DELETE,PUT' );
+    next();
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -20,10 +25,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/api/v1',api);
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
