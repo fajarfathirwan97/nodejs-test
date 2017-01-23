@@ -1,6 +1,7 @@
 #!/usr/bin/nodejs
 var debug = require('debug')('my-application');
 var app = require('../app');
+var models = require('../models');
 
 app.set('port', process.env.PORT || 3000);
 
